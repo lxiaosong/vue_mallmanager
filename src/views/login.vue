@@ -24,16 +24,17 @@ export default {
     }
   },
   methods: {
-    handleLoginin () {
-      this.$http.post('login', this.formdata)
-        .then((res) => {
-          const {meta} = res.data
-          if (meta.status === 200) {
-            this.$message.success(meta.msg)
-          } else {
-            this.$message.error(meta.msg)
-          }
-        })
+    async handleLoginin () {
+      const res = await this.$http.post('login', this.formdata)
+      const {meta} = res.data
+      if (meta.status === 200) {
+        const token = res.data.data.token
+        sessionStorage.setItem('token', token)
+        this.$router.push('/')
+        this.$message.success(meta.msg)
+      } else {
+        this.$message.error(meta.msg)
+      }
     }
   }
 }
