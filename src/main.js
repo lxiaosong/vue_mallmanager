@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import moment from 'moment'
+import myBread from '@/components/myBread.vue'
 import 'element-ui/lib/theme-chalk/index.css'
 import HttpTool from '@/pulign/http.js'
 import App from './App'
@@ -13,6 +14,8 @@ Vue.use(ElementUI)
 Vue.use(HttpTool)
 
 Vue.config.productionTip = false
+
+Vue.component('my-bread', myBread)
 
 Vue.filter('fmtDate', function (v) {
   return moment(v).format('YYYY-MM-DD HH:mm:ss')

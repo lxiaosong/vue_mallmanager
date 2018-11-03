@@ -1,11 +1,12 @@
 <template>
   <el-card class="box-card">
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator="/">
+    <!-- <el-breadcrumb separator="/">
       <el-breadcrumb-item>首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
+    <my-bread level1="用户管理" level2="用户列表"></my-bread>
     <!-- 搜索框 -->
     <el-row class="searchArea">
       <el-col :span="24">
@@ -16,7 +17,7 @@
       </el-col>
     </el-row>
     <!-- 添加用户的对话框 -->
-    <el-dialog title="添加用户" :visible.sync="dialogFormAddUser">
+    <el-dialog @close="closeDia" title="添加用户" :visible.sync="dialogFormAddUser">
       <el-form :model="formData">
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="formData.username" autocomplete="off"></el-input>
@@ -37,7 +38,7 @@
       </div>
     </el-dialog>
     <!-- 编辑用户的对话框 -->
-    <el-dialog title="编辑用户" :visible.sync="dialogFormEditUser">
+    <el-dialog @close="closeDia" title="编辑用户" :visible.sync="dialogFormEditUser">
       <el-form :model="formData">
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="formData.username" autocomplete="off" disabled></el-input>
@@ -101,9 +102,15 @@
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-row>
-            <el-button type="primary" icon="el-icon-edit" plain size="mini" circle @click="showEditUser(scope.row)"></el-button>
-            <el-button type="success" icon="el-icon-check" plain size="mini" circle @click="showChangeRole(scope.row.id)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" plain size="mini" circle @click="deleteUser(scope.row)"></el-button>
+            <el-tooltip class="item" effect="dark" content="编辑用户" placement="left">
+              <el-button type="primary" icon="el-icon-edit" plain size="mini" circle @click="showEditUser(scope.row)"></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
+              <el-button type="success" icon="el-icon-check" plain size="mini" circle @click="showChangeRole(scope.row.id)"></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="删除用户" placement="right">
+              <el-button type="danger" icon="el-icon-delete" plain size="mini" circle @click="deleteUser(scope.row)"></el-button>
+            </el-tooltip>
           </el-row>
         </template>
       </el-table-column>
@@ -142,12 +149,7 @@ export default {
       // 对话框宽度
       formLabelWidth: '120px',
       // 添加用户对话框表单数据
-      formData: {
-        username: '',
-        password: '',
-        email: '',
-        mobile: ''
-      },
+      formData: {},
       searchVal: '',
       // 用户状态
       userState: '',
@@ -166,8 +168,6 @@ export default {
     // 获取用户列表
     async loadTableData () {
       this.loading = true
-      const AUTH_TOKEN = sessionStorage.getItem('token')
-      this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
       const res = await this.$http.get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}&query=${this.searchVal}`)
       // console.log(res)
       const {data, meta} = res.data
@@ -298,6 +298,9 @@ export default {
         this.$message.error(msg)
         this.dialogFormChangeRole = false
       }
+    },
+    closeDia () {
+      this.formData = {}
     }
   }
 }
