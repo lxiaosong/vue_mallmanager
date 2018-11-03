@@ -62,7 +62,7 @@
         </el-form-item>
         <el-form-item label="角色" :label-width="formLabelWidth">
           <el-select v-model="currentUserRid">
-            <el-option label="请选择角色" :value="-1"></el-option>
+            <el-option disabled label="请选择角色" :value="-1"></el-option>
             <!-- 遍历角色数组 -->
             <el-option v-for="(item, index) in roles" :key="index" :label="item.roleName" :value="item.id"></el-option>
           </el-select>
